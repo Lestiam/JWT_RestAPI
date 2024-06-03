@@ -1,17 +1,26 @@
 package com.example.JWT_RestAPI.service;
 
 import com.example.JWT_RestAPI.security.JwtUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
     public String generateToken(String username) {
-        String token = JwtUtil.generateToken(username);
-        return token;
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        return jwtUtil.generateToken(userDetails);
     }
 
     public String extractUsername(String token) {
-        String username = JwtUtil.extractUsername(token);
-        return username;
+        return jwtUtil.extractUsername(token);
     }
 }
